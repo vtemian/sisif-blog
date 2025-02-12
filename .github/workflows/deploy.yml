@@ -1,0 +1,26 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'v22.12.0'
+          cache: 'yarn'
+      - run: yarn && yarn build
+        env:
+          SITE_URL: https://sisif.ai/blogblog/
+          BASE: blogblog/
+      - uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./dist
+          branch: gh-pages
+          clean-exclude: pr-preview
+          force: false
